@@ -1,4 +1,4 @@
-import { Form, Input } from 'antd';
+import { Form, Input, Button } from 'antd';
 
 
 const formItemLayout = {
@@ -75,7 +75,11 @@ return (
         >
             <Input.Password />
         </Form.Item>
-
+        <Form.Item label=" " colon={false}>
+            <Button type="primary" htmlType="submit">
+            Validate
+            </Button>
+        </Form.Item>
         </Form>
     );
 };

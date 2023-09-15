@@ -90,7 +90,7 @@ const PersonalSection: React.FC = () => {
 
         <Form.Item label=" " colon={false}>
             <Button type="primary" htmlType="submit">
-            Submit
+                Validate
             </Button>
         </Form.Item>
         </Form>
