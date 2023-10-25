@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Form, Input, Select, Space } from 'antd';
+import { Form, Input, Select, FormInstance } from 'antd';
 
-const AddressSection: React.FC<{ form: any }> = ({ form }) => {
+const AddressSection: React.FC<{ form: FormInstance }> = ({ form })  => {
+    const onFinish = (values: any) => {
+        console.log('Received values of form: ', values);
+    };
     const [selectedProvince, setSelectedProvince] = useState<string>('');
     const [selectedCity, setSelectedCity] = useState<string>('');
 
@@ -16,73 +19,53 @@ const AddressSection: React.FC<{ form: any }> = ({ form }) => {
         'Jawa Barat': ['Kota Bandung', 'Kota Cimahi', 'Kota Bogor', 'Kota Cirebon'],
     };
 
-    const provinceOptions = provincesSelect.map((province, index) => (
-        <option key={index} value={province}>
-        {province}
-        </option>
-    ));
-
-    const cityOptions = (citiesByProvince[selectedProvince] || []).map((city, index) => (
-        <option key={index} value={city}>
-        {city}
-        </option>
-    ));
-
     return (
         <Form
-        name="Address Information"
-        form={form} // Add this line
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 500, marginTop: 40 }}
+            name="Address Information"
+            form={form}
+            labelCol={{ span: 8 }}
+            onFinish={onFinish}
+            wrapperCol={{ span: 16 }}
+            style={{ maxWidth: 500, marginTop: 40 }}
         >
-        <Form.Item label="Province" rules={[{ required: true, message: 'Provience  is required' }]}>
-            <Select
-            placeholder="Select Province"
-            value={selectedProvince}
-            onChange={(value) => handleProvinceChange(value)}
-            >
-            {provinceOptions}
-            </Select>
-        </Form.Item>
-    
-        <Form.Item label="City" rules={[{ required: true, message: 'City is required' }]}>
-            <Select
-            placeholder="Select City"
-            value={selectedCity}
-            onChange={(value) => setSelectedCity(value)}
-            
-            >
-            {cityOptions}
-            </Select>
-        </Form.Item>
-    
-        <Form.Item label="Street Address">
-            <Space>
-            <Form.Item
-                name="street address"
-                noStyle
-                rules={[{ required: true, message: 'Street Address is required' }]}
-            >
-                <Input style={{ width: 334 }} placeholder="Please input Street Address" />
+            <Form.Item label="Province" name="province" rules={[{ required: true, message: 'Province is required' }]}>
+                <Select
+                    placeholder="Select Province"
+                    value={selectedProvince}
+                    onChange={(value) => handleProvinceChange(value)}
+                >
+                    {provincesSelect.map((province, index) => (
+                        <Select.Option key={index} value={province}>
+                            {province}
+                        </Select.Option>
+                    ))}
+                </Select>
             </Form.Item>
-            </Space>
-        </Form.Item>
+        
+            <Form.Item label="City" name="city" rules={[{ required: true, message: 'City is required' }]}>
+                <Select
+                    placeholder="Select City"
+                    value={selectedCity}
+                    onChange={(value) => setSelectedCity(value)}
+                >
+                    {(citiesByProvince[selectedProvince] || []).map((city, index) => (
+                        <Select.Option key={index} value={city}>
+                            {city}
+                        </Select.Option>
+                    ))}
+                </Select>
+            </Form.Item>
+        
+            <Form.Item label="Street Address" name="streetAddress" rules={[{ required: true, message: 'Street Address is required' }]}>
+                <Input placeholder="Please input Street Address" />
+            </Form.Item>
 
-        <Form.Item label="Zip Code">
-        <Space>
-            <Form.Item
-                name="zipCode" // Corrected the name to "zipCode"
-                noStyle
-                rules={[
-            { required: true, message: 'Zip Code is required' },
-              { max: 5, message: 'Zip Code must not exceed 5 characters' }, // Added max length validation
-            ]}
-            >
-            <Input style={{ width: 334 }} type='number' placeholder="Please input Zip Code" />
+            <Form.Item label="Zip Code" name="zipCode" rules={[
+                { required: true, message: 'Zip Code is required' },
+                { max: 5, message: 'Zip Code must not exceed 5 characters' }
+            ]}>
+                <Input type='number' placeholder="Please input Zip Code" />
             </Form.Item>
-        </Space>
-        </Form.Item>
         </Form>
     );
 };

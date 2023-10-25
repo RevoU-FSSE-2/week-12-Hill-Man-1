@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Steps as AntSteps } from 'antd';
-import { Form } from 'antd';
+import { Steps as AntSteps, Button, Form } from 'antd';
+import { FormInstance } from 'antd/lib/form';
 import { PersonalSection, AccountSection, AddressSection } from './components';
-
 
 interface StepType {
   title: string;
-  content: any;
+  content: React.FC<{ form: FormInstance; onFinish: (values: any) => void }>;
 }
 
 const steps: StepType[] = [
@@ -41,6 +40,10 @@ const App: React.FC = () => {
     setCurrent(current - 1);
   };
 
+  const onFinish = (values: any) => {
+    console.log('Form data:', values);
+  };
+
   const contentStyle: React.CSSProperties = {
     lineHeight: '260px',
     textAlign: 'center',
@@ -51,34 +54,35 @@ const App: React.FC = () => {
     <>
       <AntSteps current={current} items={steps.map((item) => ({ key: item.title, title: item.title }))} />
       <div style={contentStyle}>
-        {React.createElement(steps[current].content, { form })}
+        {React.createElement(steps[current].content, { form, onFinish })}
       </div>
-        <div style={{ marginTop: 24 }}>
-            {current > 0 && (
-              <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-                Previous
-              </Button>
-            )}
-          {current < steps.length - 1 && (
-            <Button type="primary" onClick={() => next()}>
-              Next
-            </Button>
-          )}
-          {current === steps.length - 1 && (
-            <Button
+      <div style={{ marginTop: 24 }}>
+        {current > 0 && (
+          <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+            Previous
+          </Button>
+        )}
+        {current < steps.length - 1 && (
+          <Button type="primary" onClick={() => next()}>
+            Next
+          </Button>
+        )}
+        {current === steps.length - 1 && (
+          <Button
             type="primary"
             onClick={() => {
-            form.submit();
-          }}
-  htmlType="submit"
->
-  Done
-</Button>
-
-          )}
-        </div>
+              form.submit();
+            }}
+            htmlType="submit"
+          >
+            Done
+          </Button>
+        )}
+      </div>
     </>
   );
-};
+}
+
+  
 
 export default App;

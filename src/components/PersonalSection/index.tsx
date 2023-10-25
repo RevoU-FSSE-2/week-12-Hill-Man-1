@@ -12,7 +12,10 @@ const formItemLayout = {
     },
 };
 
-const PersonalSection: React.FC<{ form: FormInstance, onFinish: (values: any) => void }> = ({ form, onFinish }) => {
+const PersonalSection: React.FC<{ form: FormInstance }> = ({ form })  => {
+    const onFinish = (values: any) => {
+        console.log('Received values of form: ', values);
+        };
     const config = {
         rules: [{ type: 'object' as const, required: true, message: 'Please Input Date of Birth!' }],
     };
