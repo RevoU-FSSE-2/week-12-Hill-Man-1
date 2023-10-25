@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Select, Space } from 'antd';
+import { Form, Input, Select, Space } from 'antd';
 
-const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
-};
-
-const PersonalSection: React.FC = () => {
+const AddressSection: React.FC<{ form: any }> = ({ form }) => {
     const [selectedProvince, setSelectedProvince] = useState<string>('');
     const [selectedCity, setSelectedCity] = useState<string>('');
 
@@ -35,7 +31,7 @@ const PersonalSection: React.FC = () => {
     return (
         <Form
         name="Address Information"
-        onFinish={onFinish}
+        form={form} // Add this line
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 500, marginTop: 40 }}
@@ -87,14 +83,8 @@ const PersonalSection: React.FC = () => {
             </Form.Item>
         </Space>
         </Form.Item>
-
-        <Form.Item label=" " colon={false}>
-            <Button type="primary" htmlType="submit">
-                Validate
-            </Button>
-        </Form.Item>
         </Form>
     );
 };
 
-export default PersonalSection;
+export default AddressSection;

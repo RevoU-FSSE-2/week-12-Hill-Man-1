@@ -1,51 +1,58 @@
 import React, { useState } from 'react';
-import { Button, message, Steps, theme } from 'antd';
+import { Button, Steps as AntSteps } from 'antd';
+import { Form } from 'antd';
 import { PersonalSection, AccountSection, AddressSection } from './components';
 
 
-const steps = [
+interface StepType {
+  title: string;
+  content: any;
+}
+
+const steps: StepType[] = [
   {
     title: 'Personal Information',
-    content: <PersonalSection/>,
+    content: PersonalSection,
   },
   {
     title: 'Address Information',
-    content: <AddressSection/>,
+    content: AddressSection,
   },
   {
     title: 'Account Information',
-    content: <AccountSection/>,
+    content: AccountSection,
   },
 ];
 
 const App: React.FC = () => {
-  const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
+  const [form] = Form.useForm();
 
-  const next = () => {
-    setCurrent(current + 1);
-  };
+  const next = async () => {
+    try {
+      await form.validateFields();
+      setCurrent(current + 1);
+    } catch (error) {
+      console.error('Form validation failed:', error);
+    }
+  };  
 
   const prev = () => {
     setCurrent(current - 1);
   };
 
-  const items = steps.map((item) => ({ key: item.title, title: item.title }));
-
   const contentStyle: React.CSSProperties = {
     lineHeight: '260px',
     textAlign: 'center',
-    color: token.colorTextTertiary,
-    backgroundColor: token.colorFillAlter,
-    borderRadius: token.borderRadiusLG,
-    border: `1px dashed ${token.colorBorder}`,
     marginTop: 16,
   };
 
   return (
     <>
-        <Steps current={current} items={items} />
-        <div style={contentStyle}>{steps[current].content}</div>
+      <AntSteps current={current} items={steps.map((item) => ({ key: item.title, title: item.title }))} />
+      <div style={contentStyle}>
+        {React.createElement(steps[current].content, { form })}
+      </div>
         <div style={{ marginTop: 24 }}>
             {current > 0 && (
               <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
@@ -58,9 +65,16 @@ const App: React.FC = () => {
             </Button>
           )}
           {current === steps.length - 1 && (
-            <Button type="primary" onClick={() => message.success('Processing complete!')} htmlType="submit">
-              Done
-            </Button>
+            <Button
+            type="primary"
+            onClick={() => {
+            form.submit();
+          }}
+  htmlType="submit"
+>
+  Done
+</Button>
+
           )}
         </div>
     </>

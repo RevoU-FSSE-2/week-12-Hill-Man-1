@@ -1,4 +1,4 @@
-import { Button, Form, Input, DatePicker } from 'antd';
+import { Form, Input, DatePicker, FormInstance } from 'antd';
 
 
 const formItemLayout = {
@@ -12,40 +12,20 @@ const formItemLayout = {
     },
 };
 
-const tailFormItemLayout = {
-    wrapperCol: {
-        xs: {
-        span: 24,
-        offset: 0,
-        },
-        sm: {
-        span: 16,
-        offset: 8,
-        },
-    },
-};
+const PersonalSection: React.FC<{ form: FormInstance, onFinish: (values: any) => void }> = ({ form, onFinish }) => {
+    const config = {
+        rules: [{ type: 'object' as const, required: true, message: 'Please Input Date of Birth!' }],
+    };
 
-const PersonalSection: React.FC = () => {
-const [form] = Form.useForm();
-const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
-};
-const config = {
-    rules: [{ type: 'object' as const, required: true, message: 'Please Input Date of Birth!' }],
-};
-
-
-
-return (
-    <Form
+    return (
+        <Form
         {...formItemLayout}
         form={form}
         name="Personal Information"
         onFinish={onFinish}
-        style={{ maxWidth: 600, marginTop : 40 }}
+        style={{ maxWidth: 600, marginTop: 40 }}
         scrollToFirstError
-    >
-
+        >
         <Form.Item
             name="Username"
             label="Username"
@@ -75,13 +55,7 @@ return (
         
         <Input />
         </Form.Item>
-
-        <Form.Item {...tailFormItemLayout}>
-            <Button type="primary" htmlType="submit">
-            Validate
-            </Button>
-        </Form.Item>
-        </Form>
+    </Form>
     );
 };
 
